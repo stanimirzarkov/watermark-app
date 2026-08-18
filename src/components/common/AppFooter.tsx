@@ -11,11 +11,7 @@ export function AppFooter() {
       }}
     >
       <Container maxWidth="lg">
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          align="center"
-        >
+        <Typography variant="body2" color="text.secondary" align="center">
           © 2026 Watermark App. All rights reserved.
         </Typography>
       </Container>

@@ -1,0 +1,64 @@
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { Box, IconButton, Paper, Stack, Typography } from '@mui/material';
+
+import type { GalleryImage } from './ImageGallery';
+
+type ImageGalleryItemProps = {
+  image: GalleryImage;
+};
+
+export function ImageGalleryItem({ image }: ImageGalleryItemProps) {
+  return (
+    <Paper
+      variant="outlined"
+      sx={{
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
+      <Box
+        component="img"
+        src={image.src}
+        alt={image.name}
+        sx={{
+          display: 'block',
+          width: '100%',
+          aspectRatio: '1 / 1',
+          objectFit: 'cover',
+        }}
+      />
+
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{
+          p: 1,
+          gap: 1,
+        }}
+      >
+        <Typography
+          variant="caption"
+          noWrap
+          title={image.name}
+          sx={{
+            minWidth: 0,
+          }}
+        >
+          {image.name}
+        </Typography>
+
+        <Stack direction="row" spacing={0.5}>
+          <IconButton size="small" aria-label={`Edit ${image.name}`}>
+            <EditOutlinedIcon fontSize="small" />
+          </IconButton>
+
+          <IconButton size="small" color="error" aria-label={`Delete ${image.name}`}>
+            <DeleteOutlineOutlinedIcon fontSize="small" />
+          </IconButton>
+        </Stack>
+      </Stack>
+    </Paper>
+  );
+}
