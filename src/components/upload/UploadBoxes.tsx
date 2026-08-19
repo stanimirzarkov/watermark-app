@@ -4,11 +4,11 @@ import { Stack } from '@mui/material';
 
 import { UploadBox } from './UploadBox';
 
-export function UploadBoxes() {
-  const handleImagesSelected = (files: File[]) => {
-    console.log('Images:', files);
-  };
+interface UploadBoxesProps {
+  onImagesSelected: (files: File[]) => void;
+}
 
+export function UploadBoxes({ onImagesSelected }: UploadBoxesProps) {
   const handleWatermarkSelected = (files: File[]) => {
     console.log('Watermark:', files);
   };
@@ -26,7 +26,7 @@ export function UploadBoxes() {
           'image/webp': [],
         }}
         multiple
-        onFilesSelected={handleImagesSelected}
+        onFilesSelected={onImagesSelected}
       />
 
       <UploadBox

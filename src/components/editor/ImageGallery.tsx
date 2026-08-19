@@ -1,20 +1,14 @@
 import { Box, Paper, Stack, Typography } from '@mui/material';
 
+import type { ImageItem } from '@/features/images/image.types';
+
 import { ImageGalleryItem } from './ImageGalleryItem';
 
-export type GalleryImage = {
-  id: string;
-  src: string;
-  name: string;
-};
+interface ImageGalleryProps {
+  images: ImageItem[];
+}
 
-type ImageGalleryProps = {
-  images?: GalleryImage[];
-};
-
-export function ImageGallery({ images = [] }: ImageGalleryProps) {
-  const hasImages = images.length > 0;
-
+export function ImageGallery({ images }: ImageGalleryProps) {
   return (
     <Paper
       variant="outlined"
@@ -27,7 +21,7 @@ export function ImageGallery({ images = [] }: ImageGalleryProps) {
         Добавени изображения
       </Typography>
 
-      {!hasImages ? (
+      {images.length === 0 ? (
         <Stack
           spacing={1}
           sx={{

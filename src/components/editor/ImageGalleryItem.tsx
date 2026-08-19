@@ -2,11 +2,11 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { Box, IconButton, Paper, Stack, Typography } from '@mui/material';
 
-import type { GalleryImage } from './ImageGallery';
+import type { ImageItem } from '@/features/images/image.types';
 
-type ImageGalleryItemProps = {
-  image: GalleryImage;
-};
+interface ImageGalleryItemProps {
+  image: ImageItem;
+}
 
 export function ImageGalleryItem({ image }: ImageGalleryItemProps) {
   return (
@@ -19,7 +19,7 @@ export function ImageGalleryItem({ image }: ImageGalleryItemProps) {
     >
       <Box
         component="img"
-        src={image.src}
+        src={image.previewUrl}
         alt={image.name}
         sx={{
           display: 'block',
@@ -31,11 +31,11 @@ export function ImageGalleryItem({ image }: ImageGalleryItemProps) {
 
       <Stack
         direction="row"
-        alignItems="center"
-        justifyContent="space-between"
         sx={{
           p: 1,
           gap: 1,
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <Typography
