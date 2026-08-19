@@ -20,6 +20,18 @@ export function HomePage() {
     setImages((currentImages) => [...currentImages, ...newImages]);
   };
 
+  const handleDeleteImage = (id: string) => {
+    setImages((currentImages) => {
+      const imageToDelete = currentImages.find((image) => image.id === id);
+
+      if (imageToDelete) {
+        URL.revokeObjectURL(imageToDelete.previewUrl);
+      }
+
+      return currentImages.filter((image) => image.id !== id);
+    });
+  };
+
   return (
     <Container
       maxWidth="xl"
@@ -40,7 +52,7 @@ export function HomePage() {
           <ActionButtons />
         </Stack>
 
-        <ImageGallery images={images} />
+        <ImageGallery images={images} onDeleteImage={handleDeleteImage} />
       </Stack>
     </Container>
   );

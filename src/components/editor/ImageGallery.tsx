@@ -6,9 +6,10 @@ import { ImageGalleryItem } from './ImageGalleryItem';
 
 interface ImageGalleryProps {
   images: ImageItem[];
+  onDeleteImage: (id: string) => void;
 }
 
-export function ImageGallery({ images }: ImageGalleryProps) {
+export function ImageGallery({ images, onDeleteImage }: ImageGalleryProps) {
   return (
     <Paper
       variant="outlined"
@@ -49,7 +50,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
           }}
         >
           {images.map((image) => (
-            <ImageGalleryItem key={image.id} image={image} />
+            <ImageGalleryItem key={image.id} image={image} onDelete={onDeleteImage} />
           ))}
         </Box>
       )}
