@@ -5,10 +5,12 @@ import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
 import { Button, Stack } from '@mui/material';
 
 interface ActionButtonsProps {
+  canProcess: boolean;
+  canDelete: boolean;
   onDeleteAll: () => void;
 }
 
-export function ActionButtons({ onDeleteAll }: ActionButtonsProps) {
+export function ActionButtons({ canProcess, canDelete, onDeleteAll }: ActionButtonsProps) {
   return (
     <Stack
       spacing={1.5}
@@ -19,15 +21,31 @@ export function ActionButtons({ onDeleteAll }: ActionButtonsProps) {
         },
       }}
     >
-      <Button variant="contained" size="large" startIcon={<CheckOutlinedIcon />}>
+      <Button
+        variant="contained"
+        size="large"
+        startIcon={<CheckOutlinedIcon />}
+        disabled={!canProcess}
+      >
         Приложи
       </Button>
 
-      <Button variant="outlined" size="large" startIcon={<LayersOutlinedIcon />}>
+      <Button
+        variant="outlined"
+        size="large"
+        startIcon={<LayersOutlinedIcon />}
+        disabled={!canProcess}
+      >
         Приложи за всички
       </Button>
 
-      <Button variant="contained" color="success" size="large" startIcon={<DownloadOutlinedIcon />}>
+      <Button
+        variant="contained"
+        color="success"
+        size="large"
+        startIcon={<DownloadOutlinedIcon />}
+        disabled={!canProcess}
+      >
         Изтегли
       </Button>
 
@@ -36,6 +54,7 @@ export function ActionButtons({ onDeleteAll }: ActionButtonsProps) {
         color="error"
         size="large"
         startIcon={<DeleteOutlineOutlinedIcon />}
+        disabled={!canDelete}
         onClick={onDeleteAll}
       >
         Изтрий всички

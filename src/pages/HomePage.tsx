@@ -19,6 +19,10 @@ export function HomePage() {
 
   const { watermark, setWatermark } = useWatermark();
 
+  const canProcess = images.length > 0 && watermark !== null;
+
+  const canDelete = images.length > 0;
+
   return (
     <Container
       maxWidth="xl"
@@ -42,7 +46,7 @@ export function HomePage() {
             watermarkName={watermark?.name}
           />
 
-          <ActionButtons onDeleteAll={deleteAll} />
+          <ActionButtons canProcess={canProcess} canDelete={canDelete} onDeleteAll={deleteAll} />
         </Stack>
 
         {uploadErrors.length > 0 && (
