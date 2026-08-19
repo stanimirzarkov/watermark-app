@@ -32,6 +32,14 @@ export function HomePage() {
     });
   };
 
+  const handleDeleteAll = () => {
+    images.forEach((image) => {
+      URL.revokeObjectURL(image.previewUrl);
+    });
+
+    setImages([]);
+  };
+
   return (
     <Container
       maxWidth="xl"
@@ -49,7 +57,7 @@ export function HomePage() {
         >
           <UploadBoxes onImagesSelected={handleImagesSelected} />
 
-          <ActionButtons />
+          <ActionButtons onDeleteAll={handleDeleteAll} />
         </Stack>
 
         <ImageGallery images={images} onDeleteImage={handleDeleteImage} />

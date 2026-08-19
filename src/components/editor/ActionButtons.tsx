@@ -1,10 +1,14 @@
-import { Button, Stack } from '@mui/material';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
-import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
-import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
+import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
+import { Button, Stack } from '@mui/material';
 
-export function ActionButtons() {
+interface ActionButtonsProps {
+  onDeleteAll: () => void;
+}
+
+export function ActionButtons({ onDeleteAll }: ActionButtonsProps) {
   return (
     <Stack
       spacing={1.5}
@@ -32,6 +36,7 @@ export function ActionButtons() {
         color="error"
         size="large"
         startIcon={<DeleteOutlineOutlinedIcon />}
+        onClick={onDeleteAll}
       >
         Изтрий всички
       </Button>
