@@ -11,6 +11,8 @@ interface UploadBoxProps {
   accept: Record<string, string[]>;
   multiple?: boolean;
   maxSize?: number;
+  previewUrl?: string;
+  previewName?: string;
   onFilesSelected: (files: File[]) => void;
   onFilesRejected?: (rejections: FileRejection[]) => void;
 }
@@ -23,6 +25,8 @@ export function UploadBox({
   accept,
   multiple = false,
   maxSize,
+  previewUrl,
+  previewName,
   onFilesSelected,
   onFilesRejected,
 }: UploadBoxProps) {
@@ -33,6 +37,8 @@ export function UploadBox({
     onDrop: onFilesSelected,
     onDropRejected: onFilesRejected,
   });
+
+  const hasPreview = Boolean(previewUrl);
 
   return (
     <Paper
@@ -67,37 +73,77 @@ export function UploadBox({
     >
       <input {...getInputProps()} />
 
-      <Stack
-        spacing={1}
-        sx={{
-          p: 3,
-          textAlign: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pointerEvents: 'none',
-        }}
-      >
-        <Box
+      {hasPreview ? (
+        <Stack
+          spacing={1}
           sx={{
-            color: isDragReject ? 'error.main' : 'primary.main',
-            display: 'flex',
+            p: 2,
+            width: '100%',
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            pointerEvents: 'none',
           }}
         >
-          {icon}
-        </Box>
+          <Box
+            component="img"
+            src={previewUrl}
+            alt={previewName ?? title}
+            sx={{
+              maxWidth: '100%',
+              maxHeight: 140,
+              objectFit: 'contain',
+            }}
+          />
 
-        <Typography variant="h6">
-          {isDragReject ? 'Невалиден файл' : isDragActive ? 'Пусни файловете тук' : title}
-        </Typography>
+          <Typography
+            variant="body2"
+            noWrap
+            sx={{
+              maxWidth: '100%',
+            }}
+          >
+            {previewName}
+          </Typography>
 
-        <Typography variant="body2" color="text.secondary">
-          {description}
-        </Typography>
+          <Typography variant="caption" color="text.secondary">
+            Кликни или плъзни нов файл за замяна
+          </Typography>
+        </Stack>
+      ) : (
+        <Stack
+          spacing={1}
+          sx={{
+            p: 3,
+            textAlign: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          <Box
+            sx={{
+              color: isDragReject ? 'error.main' : 'primary.main',
+              display: 'flex',
+            }}
+          >
+            {icon}
+          </Box>
 
-        <Typography variant="caption" color="text.secondary">
-          {formats}
-        </Typography>
-      </Stack>
+          <Typography variant="h6">
+            {isDragReject ? 'Невалиден файл' : isDragActive ? 'Пусни файловете тук' : title}
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary">
+            {description}
+          </Typography>
+
+          <Typography variant="caption" color="text.secondary">
+            {formats}
+          </Typography>
+        </Stack>
+      )}
     </Paper>
   );
 }

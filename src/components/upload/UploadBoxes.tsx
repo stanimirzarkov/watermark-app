@@ -17,15 +17,26 @@ const ACCEPTED_IMAGE_TYPES = {
 interface UploadBoxesProps {
   onImagesSelected: (files: File[]) => void;
   onImagesRejected?: (rejections: FileRejection[]) => void;
+  onWatermarkSelected: (file: File) => void;
+  onWatermarkRejected?: (rejections: FileRejection[]) => void;
+  watermarkPreviewUrl?: string;
+  watermarkName?: string;
 }
 
-export function UploadBoxes({ onImagesSelected, onImagesRejected }: UploadBoxesProps) {
+export function UploadBoxes({
+  onImagesSelected,
+  onImagesRejected,
+  onWatermarkSelected,
+  onWatermarkRejected,
+  watermarkPreviewUrl,
+  watermarkName,
+}: UploadBoxesProps) {
   const handleWatermarkSelected = (files: File[]) => {
-    console.log('Watermark:', files);
-  };
+    const [file] = files;
 
-  const handleWatermarkRejected = (rejections: FileRejection[]) => {
-    console.log('Rejected watermark:', rejections);
+    if (file) {
+      onWatermarkSelected(file);
+    }
   };
 
   return (
@@ -49,8 +60,10 @@ export function UploadBoxes({ onImagesSelected, onImagesRejected }: UploadBoxesP
         formats="PNG, JPG, WebP до 20MB"
         accept={ACCEPTED_IMAGE_TYPES}
         maxSize={MAX_FILE_SIZE}
+        previewUrl={watermarkPreviewUrl}
+        previewName={watermarkName}
         onFilesSelected={handleWatermarkSelected}
-        onFilesRejected={handleWatermarkRejected}
+        onFilesRejected={onWatermarkRejected}
       />
     </Stack>
   );

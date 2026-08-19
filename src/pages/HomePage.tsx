@@ -4,6 +4,7 @@ import { ActionButtons } from '@/components/editor/ActionButtons';
 import { ImageGallery } from '@/components/editor/ImageGallery';
 import { UploadBoxes } from '@/components/upload/UploadBoxes';
 import { useImages } from '@/features/images/useImages';
+import { useWatermark } from '@/features/watermark/useWatermark';
 
 export function HomePage() {
   const {
@@ -15,6 +16,8 @@ export function HomePage() {
     deleteAll,
     clearErrors,
   } = useImages();
+
+  const { watermark, setWatermark } = useWatermark();
 
   return (
     <Container
@@ -31,7 +34,13 @@ export function HomePage() {
             alignItems: 'stretch',
           }}
         >
-          <UploadBoxes onImagesSelected={addImages} onImagesRejected={handleRejectedFiles} />
+          <UploadBoxes
+            onImagesSelected={addImages}
+            onImagesRejected={handleRejectedFiles}
+            onWatermarkSelected={setWatermark}
+            watermarkPreviewUrl={watermark?.previewUrl}
+            watermarkName={watermark?.name}
+          />
 
           <ActionButtons onDeleteAll={deleteAll} />
         </Stack>
