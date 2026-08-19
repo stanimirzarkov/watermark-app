@@ -1,17 +1,19 @@
 import type { ReactNode } from 'react';
 
 import { Box, Paper, Stack, Typography } from '@mui/material';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, type FileRejection } from 'react-dropzone';
 
-type UploadBoxProps = {
+interface UploadBoxProps {
   icon: ReactNode;
   title: string;
   description: string;
   formats: string;
   accept: Record<string, string[]>;
   multiple?: boolean;
+  maxSize?: number;
   onFilesSelected: (files: File[]) => void;
-};
+  onFilesRejected?: (rejections: FileRejection[]) => void;
+}
 
 export function UploadBox({
   icon,
@@ -20,12 +22,16 @@ export function UploadBox({
   formats,
   accept,
   multiple = false,
+  maxSize,
   onFilesSelected,
+  onFilesRejected,
 }: UploadBoxProps) {
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     accept,
     multiple,
+    maxSize,
     onDrop: onFilesSelected,
+    onDropRejected: onFilesRejected,
   });
 
   return (

@@ -1,5 +1,6 @@
-import { Container, Stack } from '@mui/material';
+import { Alert, Container, Stack } from '@mui/material';
 import { useState } from 'react';
+import type { FileRejection } from 'react-dropzone';
 
 import { ActionButtons } from '@/components/editor/ActionButtons';
 import { ImageGallery } from '@/components/editor/ImageGallery';
@@ -8,8 +9,11 @@ import type { ImageItem } from '@/features/images/image.types';
 
 export function HomePage() {
   const [images, setImages] = useState<ImageItem[]>([]);
+  const [uploadErrors, setUploadErrors] = useState<string[]>([]);
 
   const handleImagesSelected = (files: File[]) => {
+    setUploadErrors([]);
+
     const newImages: ImageItem[] = files.map((file) => ({
       id: crypto.randomUUID(),
       file,
@@ -20,7 +24,34 @@ export function HomePage() {
     setImages((currentImages) => [...currentImages, ...newImages]);
   };
 
+  const handleImagesRejected = (rejections: FileRejection[]) => {
+    const errors = rejections.map((rejection) => {
+      const reasons = rejection.errors
+        .map((error) => {
+          if (error.code === 'file-too-large') {
+            return 'размерът надвишава 20 MB';
+          }
+
+          if (error.code === 'file-invalid-type') {
+            return 'неподдържан формат';
+          }
+
+          if (error.code === 'too-many-files') {
+            return 'твърде много файлове';
+          }
+
+          return error.message;
+        })
+        .join(', ');
+
+      return `${rejection.file.name} — ${reasons}`;
+    });
+
+    setUploadErrors(errors);
+  };
+
   const handleDeleteImage = (id: string) => {
+    setUploadErrors([]);
     setImages((currentImages) => {
       const imageToDelete = currentImages.find((image) => image.id === id);
 
@@ -38,6 +69,7 @@ export function HomePage() {
     });
 
     setImages([]);
+    setUploadErrors([]);
   };
 
   return (
@@ -55,10 +87,31 @@ export function HomePage() {
             alignItems: 'stretch',
           }}
         >
-          <UploadBoxes onImagesSelected={handleImagesSelected} />
+          <UploadBoxes
+            onImagesSelected={handleImagesSelected}
+            onImagesRejected={handleImagesRejected}
+          />
 
           <ActionButtons onDeleteAll={handleDeleteAll} />
         </Stack>
+
+        {uploadErrors.length > 0 && (
+          <Alert severity="warning" onClose={() => setUploadErrors([])}>
+            <strong>Следните файлове не бяха качени:</strong>
+
+            <ul
+              style={{
+                marginTop: 8,
+                marginBottom: 0,
+                paddingLeft: 20,
+              }}
+            >
+              {uploadErrors.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
 
         <ImageGallery images={images} onDeleteImage={handleDeleteImage} />
       </Stack>
