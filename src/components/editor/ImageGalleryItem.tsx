@@ -7,9 +7,10 @@ import type { ImageItem } from '@/features/images/image.types';
 interface ImageGalleryItemProps {
   image: ImageItem;
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
-export function ImageGalleryItem({ image, onDelete }: ImageGalleryItemProps) {
+export function ImageGalleryItem({ image, onDelete, onEdit }: ImageGalleryItemProps) {
   return (
     <Paper
       variant="outlined"
@@ -51,7 +52,11 @@ export function ImageGalleryItem({ image, onDelete }: ImageGalleryItemProps) {
         </Typography>
 
         <Stack direction="row" spacing={0.5}>
-          <IconButton size="small" aria-label={`Edit ${image.name}`}>
+          <IconButton
+            size="small"
+            aria-label={`Edit ${image.name}`}
+            onClick={() => onEdit(image.id)}
+          >
             <EditOutlinedIcon fontSize="small" />
           </IconButton>
 
