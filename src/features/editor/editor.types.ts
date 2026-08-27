@@ -12,6 +12,6 @@ export interface EditorWatermark {
 export interface WatermarkConfig {
   x: number;
   y: number;
-  scale: number;
+  widthRatio: number;
   opacity: number;
 }

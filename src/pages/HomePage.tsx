@@ -1,23 +1,16 @@
-import { Alert, Container, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 
 import { ActionButtons } from '@/components/editor/ActionButtons';
 import { ImageEditorModal } from '@/components/editor/ImageEditorModal';
 import { ImageGallery } from '@/components/editor/ImageGallery';
 import { UploadBoxes } from '@/components/upload/UploadBoxes';
+
 import { useImageEditor } from '@/features/editor/useImageEditor';
 import { useImages } from '@/features/images/useImages';
 import { useWatermark } from '@/features/watermark/useWatermark';
 
 export function HomePage() {
-  const {
-    images,
-    uploadErrors,
-    addImages,
-    handleRejectedFiles,
-    deleteImage,
-    deleteAll,
-    clearErrors,
-  } = useImages();
+  const { images, addImages, handleRejectedFiles, deleteImage, deleteAll } = useImages();
 
   const { watermark, setWatermark } = useWatermark();
 
@@ -25,8 +18,10 @@ export function HomePage() {
     isOpen,
     selectedImage,
     watermark: editorWatermark,
+    watermarkConfig,
     editImage,
     closeEditor,
+    updateWatermarkConfig,
   } = useImageEditor({
     images,
     watermark,
@@ -37,57 +32,61 @@ export function HomePage() {
   const canDelete = images.length > 0;
 
   return (
-    <Container
-      maxWidth="xl"
+    <Box
       sx={{
-        py: { xs: 2, sm: 3, md: 4 },
+        width: '100%',
+        maxWidth: 1400,
+        mx: 'auto',
+        px: {
+          xs: 2,
+          sm: 3,
+          md: 4,
+        },
+        py: {
+          xs: 3,
+          md: 4,
+        },
       }}
     >
-      <Stack spacing={3}>
-        <Stack
-          direction={{ xs: 'column', md: 'row' }}
-          spacing={2}
+      <Stack spacing={4}>
+        <Box
           sx={{
-            alignItems: 'stretch',
+            display: 'flex',
+            flexDirection: {
+              xs: 'column',
+              md: 'row',
+            },
+            gap: 3,
+            alignItems: {
+              xs: 'stretch',
+              md: 'flex-start',
+            },
           }}
         >
-          <UploadBoxes
-            onImagesSelected={addImages}
-            onImagesRejected={handleRejectedFiles}
-            onWatermarkSelected={setWatermark}
-            watermarkPreviewUrl={watermark?.previewUrl}
-            watermarkName={watermark?.name}
-          />
+          <Box sx={{ flex: 1 }}>
+            <UploadBoxes
+              onImagesSelected={addImages}
+              onImagesRejected={handleRejectedFiles}
+              onWatermarkSelected={setWatermark}
+              watermarkPreviewUrl={watermark?.previewUrl}
+              watermarkName={watermark?.name}
+            />
+          </Box>
 
           <ActionButtons canProcess={canProcess} canDelete={canDelete} onDeleteAll={deleteAll} />
-        </Stack>
-
-        {uploadErrors.length > 0 && (
-          <Alert severity="warning" onClose={clearErrors}>
-            <strong>Следните файлове не бяха качени:</strong>
-
-            <ul
-              style={{
-                marginTop: 8,
-                marginBottom: 0,
-                paddingLeft: 20,
-              }}
-            >
-              {uploadErrors.map((error) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          </Alert>
-        )}
+        </Box>
 
         <ImageGallery images={images} onDeleteImage={deleteImage} onEditImage={editImage} />
-        <ImageEditorModal
-          open={isOpen}
-          image={selectedImage}
-          watermark={editorWatermark}
-          onClose={closeEditor}
-        />
       </Stack>
-    </Container>
+
+      <ImageEditorModal
+        open={isOpen}
+        image={selectedImage}
+        watermark={editorWatermark}
+        watermarkConfig={watermarkConfig}
+        onWatermarkConfigChange={updateWatermarkConfig}
+        onClose={closeEditor}
+      />
+    </Box>
   );
 }
