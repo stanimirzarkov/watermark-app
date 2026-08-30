@@ -48,6 +48,28 @@ export function useImages() {
     setUploadErrors(errors);
   }, []);
 
+  const setProcessedImage = useCallback((id: string, processedBlob: Blob) => {
+    setImages((currentImages) =>
+      currentImages.map((image) =>
+        image.id === id
+          ? {
+              ...image,
+              processedBlob,
+            }
+          : image,
+      ),
+    );
+  }, []);
+
+  const setProcessedImages = useCallback((processedImages: Map<string, Blob>) => {
+    setImages((currentImages) =>
+      currentImages.map((image) => ({
+        ...image,
+        processedBlob: processedImages.get(image.id),
+      })),
+    );
+  }, []);
+
   const deleteImage = useCallback((id: string) => {
     setUploadErrors([]);
 
@@ -83,6 +105,8 @@ export function useImages() {
     uploadErrors,
     addImages,
     handleRejectedFiles,
+    setProcessedImage,
+    setProcessedImages,
     deleteImage,
     deleteAll,
     clearErrors,

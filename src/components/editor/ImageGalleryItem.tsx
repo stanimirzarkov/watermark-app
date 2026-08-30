@@ -20,16 +20,29 @@ export function ImageGalleryItem({ image, onDelete, onEdit }: ImageGalleryItemPr
       }}
     >
       <Box
-        component="img"
-        src={image.previewUrl}
-        alt={image.name}
         sx={{
-          display: 'block',
           width: '100%',
-          aspectRatio: '1 / 1',
-          objectFit: 'cover',
+          height: 220,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
         }}
-      />
+      >
+        <Box
+          component="img"
+          src={image.previewUrl}
+          alt={image.name}
+          sx={{
+            display: 'block',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            width: 'auto',
+            height: 'auto',
+            objectFit: 'contain',
+          }}
+        />
+      </Box>
 
       <Stack
         direction="row"

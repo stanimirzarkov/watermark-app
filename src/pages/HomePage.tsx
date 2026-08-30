@@ -1,6 +1,5 @@
 import { Box, Stack } from '@mui/material';
 
-import { ActionButtons } from '@/components/editor/ActionButtons';
 import { ImageEditorModal } from '@/components/editor/ImageEditorModal';
 import { ImageGallery } from '@/components/editor/ImageGallery';
 import { UploadBoxes } from '@/components/upload/UploadBoxes';
@@ -22,14 +21,11 @@ export function HomePage() {
     editImage,
     closeEditor,
     updateWatermarkConfig,
+    saveWatermarkConfig,
   } = useImageEditor({
     images,
     watermark,
   });
-
-  const canProcess = images.length > 0 && watermark !== null;
-
-  const canDelete = images.length > 0;
 
   return (
     <Box
@@ -72,8 +68,6 @@ export function HomePage() {
               watermarkName={watermark?.name}
             />
           </Box>
-
-          <ActionButtons canProcess={canProcess} canDelete={canDelete} onDeleteAll={deleteAll} />
         </Box>
 
         <ImageGallery images={images} onDeleteImage={deleteImage} onEditImage={editImage} />
@@ -82,10 +76,12 @@ export function HomePage() {
       <ImageEditorModal
         open={isOpen}
         image={selectedImage}
+        images={images}
         watermark={editorWatermark}
         watermarkConfig={watermarkConfig}
         onWatermarkConfigChange={updateWatermarkConfig}
         onClose={closeEditor}
+        onSave={saveWatermarkConfig}
       />
     </Box>
   );

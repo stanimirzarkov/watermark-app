@@ -26,6 +26,9 @@ export function useImageEditor({ images, watermark }: UseImageEditorProps) {
 
   const [watermarkConfig, setWatermarkConfig] = useState<WatermarkConfig>(DEFAULT_WATERMARK_CONFIG);
 
+  const [savedWatermarkConfig, setSavedWatermarkConfig] =
+    useState<WatermarkConfig>(DEFAULT_WATERMARK_CONFIG);
+
   const editImage = useCallback(
     (imageId: string) => {
       const image = images.find((currentImage) => currentImage.id === imageId);
@@ -45,24 +48,35 @@ export function useImageEditor({ images, watermark }: UseImageEditorProps) {
         name: watermark.name,
       });
 
-      setWatermarkConfig(DEFAULT_WATERMARK_CONFIG);
+      setWatermarkConfig(savedWatermarkConfig);
+
       setIsOpen(true);
     },
-    [images, watermark],
+    [images, savedWatermarkConfig, watermark],
   );
 
   const closeEditor = useCallback(() => {
+    setWatermarkConfig(savedWatermarkConfig);
+
     setIsOpen(false);
     setSelectedImage(null);
     setEditorWatermark(null);
-  }, []);
+  }, [savedWatermarkConfig]);
 
   const updateWatermarkConfig = useCallback((updates: Partial<WatermarkConfig>) => {
-    setWatermarkConfig((current) => ({
-      ...current,
+    setWatermarkConfig((currentConfig) => ({
+      ...currentConfig,
       ...updates,
     }));
   }, []);
+
+  const saveWatermarkConfig = useCallback(() => {
+    setSavedWatermarkConfig({
+      ...watermarkConfig,
+    });
+
+    setIsOpen(false);
+  }, [watermarkConfig]);
 
   return {
     isOpen,
@@ -72,5 +86,6 @@ export function useImageEditor({ images, watermark }: UseImageEditorProps) {
     editImage,
     closeEditor,
     updateWatermarkConfig,
+    saveWatermarkConfig,
   };
 }

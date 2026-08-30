@@ -1,7 +1,6 @@
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import {
   Box,
-  Button,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -9,32 +8,70 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { useRef } from 'react';
 
-import type { EditorImage, EditorWatermark, WatermarkConfig } from '@/features/editor/editor.types';
+import type {
+  EditorImage,
+  EditorWatermark,
+  ImageItem,
+  WatermarkConfig,
+} from '@/features/editor/editor.types';
 
+import { EditorActions } from './EditorActions';
 import { EditorControls } from './EditorControls';
-import { ImageEditorCanvas } from './ImageEditorCanvas';
+import { ImageEditorCanvas, type ImageEditorCanvasHandle } from './ImageEditorCanvas';
+import { downloadAllImages } from './imageProcessor';
 
 interface ImageEditorModalProps {
   open: boolean;
   image: EditorImage | null;
+  images: ImageItem[];
   watermark: EditorWatermark | null;
   watermarkConfig: WatermarkConfig;
   onWatermarkConfigChange: (updates: Partial<WatermarkConfig>) => void;
   onClose: () => void;
+  onSave: () => void;
 }
 
 export function ImageEditorModal({
   open,
   image,
+  images,
   watermark,
   watermarkConfig,
   onWatermarkConfigChange,
   onClose,
+  onSave,
 }: ImageEditorModalProps) {
+  const canvasRef = useRef<ImageEditorCanvasHandle | null>(null);
+
   if (!image || !watermark) {
     return null;
   }
+
+  const handleApplyAndDownload = () => {
+    const dataUrl = canvasRef.current?.exportImage();
+
+    if (!dataUrl) {
+      return;
+    }
+
+    const link = document.createElement('a');
+
+    link.href = dataUrl;
+    link.download = `watermarked-${image.name}`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleApplyAndDownloadAll = async () => {
+    if (!watermark) {
+      return;
+    }
+    await downloadAllImages(images, watermark, watermarkConfig);
+  };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl" fullScreen>
@@ -94,6 +131,7 @@ export function ImageEditorModal({
             }}
           >
             <ImageEditorCanvas
+              ref={canvasRef}
               imageSrc={image.src}
               watermarkSrc={watermark.src}
               watermarkConfig={watermarkConfig}
@@ -119,26 +157,12 @@ export function ImageEditorModal({
         </Stack>
       </DialogContent>
 
-      <Box
-        sx={{
-          px: {
-            xs: 2,
-            sm: 3,
-          },
-          py: 2,
-          borderTop: 1,
-          borderColor: 'divider',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: 1.5,
-        }}
-      >
-        <Button variant="outlined" onClick={onClose}>
-          Отказ
-        </Button>
-
-        <Button variant="contained">Приложи</Button>
-      </Box>
+      <EditorActions
+        onClose={onClose}
+        onApply={onSave}
+        onApplyAndDownload={handleApplyAndDownload}
+        onApplyAndDownloadAll={handleApplyAndDownloadAll}
+      />
     </Dialog>
   );
 }

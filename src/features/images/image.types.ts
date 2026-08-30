@@ -3,4 +3,5 @@ export interface ImageItem {
   file: File;
   previewUrl: string;
   name: string;
+  processedBlob?: Blob;
 }
